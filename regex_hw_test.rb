@@ -2,35 +2,20 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require './regex_hw.rb'
 
-class DateFinderTest < Minitest::Test
+class ValidatorTest < Minitest::Test
   def test_initialize
-    assert DateFinder.new('homework.csv')
+    assert Validator.new('simple.csv')
   end
 
-  def test_simple
-    finder = DateFinder.new('homework.csv')
-    assert_equal ['919-302-5139', '919-555-1111'], finder.get_numbers
-  end
-end
-
-class EmailFinderTest < Minitest::Test
-  def test_initialize
-    assert EmailFinder.new('homework.csv')
+  def test_true_false_array
+    validator = Validator.new('simple.csv')
+    assert_equal [true, false], validator.true_false_array("joined", /^([1][0-2]|[0]\d|\d)[\/-]([3][01]|[0-2]\d|\d)[\/-](\d{2}|\d{4})$/)
+    assert_equal [true, false], validator.true_false_array("email", /^([\w\d_\-\.]+)@([\w\d_\-\.]+)\.([\w]{2,5})$/)
+    assert_equal [true, true], validator.true_false_array("phone", /(^(\(([\d]{3})\)\s?|[^0]\d{2}(-|\s|\.))\d{3}(-|\s|\.)\d{4}$)|(^[^0]\d{9}$)/)
   end
 
-  def test_simple
-    finder = EmailFinder.new('homework.csv')
-    assert_equal ['919-302-5139', '919-555-1111'], finder.get_numbers
-  end
-end
-
-class PhoneFinderTest < Minitest::Test
-  def test_initialize
-    assert PhoneFinder.new('homework.csv')
-  end
-
-  def test_simple
-    finder = PhoneFinder.new('homework.csv')
-    assert_equal ['919-302-5139', '919-555-1111'], finder.get_numbers
+  def test_validation_array
+    validator = Validator.new('simple.csv')
+    assert_equal [[true, true, true], [false, false, true]], validator.validation_array
   end
 end
